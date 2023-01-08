@@ -4,11 +4,15 @@ import {Card, CardActionArea, CardMedia, CardContent, Typography, Box, Tooltip, 
 import { styled } from '@mui/material/styles';
 import { Icon } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { toggleFollowing } from '../../features/vacations/vacationsSlice';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { selectIsAdmin } from '../../features/auth/authSlice';
+import ModeIcon from '@mui/icons-material/Mode';
+import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -49,6 +53,7 @@ export default function VacationCard({details}: cardProps) {
   const dispatch = useAppDispatch();
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const isAdmin = useAppSelector(selectIsAdmin);
 
 
   const cardClick = () => {
@@ -130,14 +135,24 @@ export default function VacationCard({details}: cardProps) {
       </CardActionArea>
       </Tooltip>
       <CardActionsNoTopPadding disableSpacing={true}>
-      <ExpandMore
-          expand={expanded}
-          onClick={toggleExpanded}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
+        {isAdmin && (
+          <>
+            <IconButton aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
+            <IconButton aria-label="update">
+              <ModeIcon />
+            </IconButton>
+          </>          
+        )}
+        <ExpandMore
+            expand={expanded}
+            onClick={toggleExpanded}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </ExpandMore>
       </CardActionsNoTopPadding>
     </Card>
   )

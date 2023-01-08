@@ -6,6 +6,7 @@ import { AuthAxios } from '../../services/api';
 import axios from 'axios';
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentPage, selectPerPage } from '../../features/vacations/vacationsSlice';
+import VacationsModal from './VacationsModal';
 
 export default function Vacations() {
   const perPage = useAppSelector(selectPerPage);
@@ -42,6 +43,7 @@ export default function Vacations() {
     }}>
       <VacationsSearch />
       <VacationsGrid />
+      <VacationsModal />
     </Box>
   )
 }

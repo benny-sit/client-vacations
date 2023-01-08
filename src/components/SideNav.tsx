@@ -15,14 +15,17 @@ import PlagiarismIcon from '@mui/icons-material/Plagiarism';
 import Typography from '@mui/material/Typography'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import { useAppSelector } from '../app/hooks'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { selectIsAdmin } from '../features/auth/authSlice'
+import AddIcon from '@mui/icons-material/Add';
+import { openVacationModal } from '../features/modals/modalsSlice'
 
 const drawerWidth = 210;
 const drawerMaxWidth = 240;
 
 export default function SideNav() {
-  const isAdmin = useAppSelector(selectIsAdmin)
+  const isAdmin = useAppSelector(selectIsAdmin);
+  const dispatch = useAppDispatch();
 
   return (
     <Box
@@ -96,6 +99,15 @@ export default function SideNav() {
                   <PlagiarismIcon />
                 </ListItemIcon>
               <ListItemText primary='Reports' />
+              </ListItemButton>
+            </ListItem>
+
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => dispatch(openVacationModal({}))}>
+                <ListItemIcon>
+                  <AddIcon />      
+                </ListItemIcon>
+              <ListItemText primary='New Vacation' />
               </ListItemButton>
             </ListItem>
           </List>
