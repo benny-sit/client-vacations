@@ -1,0 +1,52 @@
+.authWrapper {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+}
+
+
+
+.sideWrapper {
+  
+  position: relative;
+  flex-grow: 2;
+
+  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.2);
+  border-right: 3px solid #FAFDF7;
+  background: linear-gradient(
+      to left,
+      rgba(0, 0, 0, 0.07) 0%,
+      rgba(0, 0, 0, 0.15) 60%,
+      rgba(0, 0, 0, 0.3) 100%
+    ),
+    url("/public/bg-auth.jpg") no-repeat right center;
+  background-size: cover;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+@media (max-width: 968px) {
+  .sideWrapper {
+    display: none;
+  }
+}
+
+.logoWrapper {
+    position: relative;
+    padding-right: 5rem;
+}
+
+.titleImg {
+    max-width: 100%;
+    height: auto;
+}
+
+.sideImg {
+    position: absolute;
+    
+    opacity: 0.4;
+}
+
