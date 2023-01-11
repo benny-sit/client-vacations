@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
+import React, {useDeferredValue, useEffect, useState} from 'react'
 import { Vacation } from '../../types'
 import {Card, CardActionArea, CardMedia, CardContent, Typography, Box, Tooltip, CardActions, Chip, Divider} from '@mui/material'
 import { styled } from '@mui/material/styles';
 import { Icon } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { toggleFollowing } from '../../features/vacations/vacationsSlice';
+import { deleteVacation, setEditVacation, toggleFollowing } from '../../features/vacations/vacationsSlice';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -13,6 +13,9 @@ import { selectIsAdmin } from '../../features/auth/authSlice';
 import ModeIcon from '@mui/icons-material/Mode';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { AuthAxios } from '../../services/api';
+import { openVacationModal } from '../../features/modals/modalsSlice';
+import useDebounce from '../../custom-hooks/UseDebounce';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -55,13 +58,39 @@ export default function VacationCard({details}: cardProps) {
   const [expanded, setExpanded] = useState(false);
   const isAdmin = useAppSelector(selectIsAdmin);
 
+  useDebounce(() => {
+    AuthAxios.post(`/vacations/${details.isFollowing ? 'follow' : 'unfollow'}`, {
+      vacationId: details.id,
+    }).then((response) => {
+      console.log(response);
+      
+    }).catch((error) => {
+      console.log(details.id + " --- Error in updating follow state")
+    });
+  }, [details.isFollowing], 500)
+
+  const deleteThisVacation = () => {
+    AuthAxios.delete(`/admin/vacations/${details.id}`)
+      .then((response) => {
+        dispatch(deleteVacation({ id: details.id }));
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  const editThisVacation = () => {
+    dispatch(setEditVacation({editVacation: details}))
+    dispatch(openVacationModal({}))
+  }
 
   const cardClick = () => {
     handleTooltipOpen();
     setTimeout(() => {
       handleTooltipClose();
     }, 500)
-    dispatch(toggleFollowing({ id: details.id}));
+    dispatch(toggleFollowing({id: details.id}))
+    
   }
 
   const handleTooltipOpen = () => {
@@ -77,7 +106,7 @@ export default function VacationCard({details}: cardProps) {
   }
 
   return (
-    <Card sx={{ maxWidth: 375 }}>
+    <Card sx={{ maxWidth: 375}}>
       <Tooltip
         title={details.isFollowing ? "Following": "Un Following"}
         disableFocusListener
@@ -119,15 +148,18 @@ export default function VacationCard({details}: cardProps) {
                 {details.description}
 
                 </Typography>
-                <Chip icon={<AccessTimeIcon />} label={`starts: ${details.startDate.toUTCString()}`} />
-                <Chip icon={<AccessTimeIcon />} label={`ends: ${details.endDate.toUTCString()}`} />
+                <Typography variant='overline' display="block" gutterBottom>
+                  Price: {details.price}$
+                </Typography>
+                <Chip icon={<AccessTimeIcon />} label={`starts: ${new Date(details.startDate).toUTCString()}`} />
+                <Chip icon={<AccessTimeIcon />} label={`ends: ${new Date(details.endDate).toUTCString()}`} />
               </Box>
             
             )
             :
             (
               <Typography variant="body2" color="text.secondary">
-              {details.description.substring(0, 100) + " ..."}
+              {details.description.substring(0, 100) + (details.description.length > 100 && " ..." || '')}
               </Typography>
             )
             }
@@ -137,14 +169,20 @@ export default function VacationCard({details}: cardProps) {
       <CardActionsNoTopPadding disableSpacing={true}>
         {isAdmin && (
           <>
-            <IconButton aria-label="delete">
+            <Tooltip title="delete">
+            <IconButton aria-label="delete" onClick={deleteThisVacation}>
               <DeleteIcon />
             </IconButton>
-            <IconButton aria-label="update">
+            </Tooltip>
+            <Tooltip title="edit">
+            <IconButton aria-label="update" onClick={editThisVacation}>
               <ModeIcon />
             </IconButton>
+            </Tooltip>
           </>          
         )}
+        <Tooltip title={expanded ? "collapse" : "show more"}>
+          <Box sx={{marginLeft: 'auto'}}>
         <ExpandMore
             expand={expanded}
             onClick={toggleExpanded}
@@ -152,7 +190,9 @@ export default function VacationCard({details}: cardProps) {
             aria-label="show more"
           >
             <ExpandMoreIcon />
-          </ExpandMore>
+        </ExpandMore>
+        </Box>
+        </Tooltip>
       </CardActionsNoTopPadding>
     </Card>
   )

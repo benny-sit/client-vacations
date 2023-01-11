@@ -4,6 +4,7 @@ import { Vacation } from '../../types'
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectCurrentPage, selectNumberPages, selectVacations, setCurrentPage } from '../../features/vacations/vacationsSlice';
 import VacationCard from './VacationCard';
+import { AuthAxios } from '../../services/api';
 
 
 
@@ -18,7 +19,7 @@ export default function VacationsGrid() {
     dispatch(setCurrentPage({ currentPage: value}))
   }
 
-
+  // console.log(vacations)
   return (
     <Box sx={{
       display: 'flex',
@@ -27,7 +28,7 @@ export default function VacationsGrid() {
       
       flexGrow: 1,
       mt: 3,
-      mx: { xs: 1, md: 7},
+      mx: { xs: 1, sm:3 , lg: 7},
     }}>
       <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent='center' alignItems='flex-start'>
         {vacations.map((vac) => (

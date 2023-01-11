@@ -16,10 +16,24 @@ import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { logOut, selectCurrentUser } from '../features/auth/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { logOut, selectCurrentUser, selectIsAdmin } from '../features/auth/authSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import { openVacationModal } from '../features/modals/modalsSlice';
 
-const pages: string[] = ['Dashboard', 'Reports', ] //['Products', 'Pricing', 'Blog'];
+const pages = [
+  {
+    name: 'Dashboard',
+    AdminOnly: false,
+  },
+  {
+    name: 'Reports',
+    AdminOnly: true,
+  },
+  {
+    name: 'New Vacation',
+    AdminOnly: true,
+  }
+] 
 const settings = ['Profile', 'Account', 'Logout'];
 
 const Search = styled('div')(({ theme }) => ({
@@ -72,6 +86,7 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const user = useAppSelector(selectCurrentUser)
+  const isAdmin = useAppSelector(selectIsAdmin)
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -80,8 +95,16 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (e: any) => {
     setAnchorElNav(null);
+    const pathName = e.target.textContent.toLowerCase()
+    if (pathName === 'reports') {
+      navigate('/dash/reports');
+    } else if (pathName === 'dashboard') {
+      navigate('/dash');
+    } else if (pathName === 'new vacation' ) {
+      dispatch(openVacationModal({}))
+    }
   };
 
   const handleCloseUserMenu = (e: any) => {
@@ -111,8 +134,12 @@ function ResponsiveAppBar() {
             alignItems: 'center',
             gap: 1,
           }}>
-          <img src='vacationsLogo.png' width={48}/>
+            <Link to='/dash'>
+          <img src='/vacationsLogo.png' width={48}/>
+            </Link>
+            <Link to='/dash'>
           <img src='/vacationsTitle.png' height={32}/>
+            </Link>
           </Box>
           
 
@@ -145,11 +172,15 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {pages.map((page) => 
+                {
+                  if(page.AdminOnly && !isAdmin) return
+                  
+                  return (<MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.name}</Typography>
+                </MenuItem>)
+                }
+              )}
             </Menu>
           </Box>
 
@@ -173,15 +204,18 @@ function ResponsiveAppBar() {
           <img src='/vacationsTitle.png' height={26}/>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, alignItems: 'center', justifyContent: 'flex-end' }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
+            {pages.map((page) => {
+              if (page.AdminOnly && !isAdmin) return 
+
+              return (<Button
+                key={page.name}
                 onClick={handleCloseNavMenu}
                 sx={{mx: 1, color: '#09040E', display: 'block' }}
               >
-                {page}
-              </Button>
-            ))}
+                {page.name}
+              </Button>)
+            }
+            )}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

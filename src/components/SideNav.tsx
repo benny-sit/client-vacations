@@ -19,6 +19,8 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { selectIsAdmin } from '../features/auth/authSlice'
 import AddIcon from '@mui/icons-material/Add';
 import { openVacationModal } from '../features/modals/modalsSlice'
+import { setEditVacation } from '../features/vacations/vacationsSlice'
+import { Link, useNavigate } from 'react-router-dom'
 
 const drawerWidth = 210;
 const drawerMaxWidth = 240;
@@ -26,6 +28,7 @@ const drawerMaxWidth = 240;
 export default function SideNav() {
   const isAdmin = useAppSelector(selectIsAdmin);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -94,16 +97,24 @@ export default function SideNav() {
             </ListItem>
             
             <ListItem disablePadding>
-              <ListItemButton>
+                
+              <ListItemButton onClick={() => {
+                navigate('/dash/reports')
+              }}>
                 <ListItemIcon>
                   <PlagiarismIcon />
                 </ListItemIcon>
               <ListItemText primary='Reports' />
               </ListItemButton>
+                
             </ListItem>
 
             <ListItem disablePadding>
-              <ListItemButton onClick={() => dispatch(openVacationModal({}))}>
+              <ListItemButton onClick={() => {
+                dispatch(setEditVacation({editVacation: undefined}))
+                dispatch(openVacationModal({}))
+                
+                }}>
                 <ListItemIcon>
                   <AddIcon />      
                 </ListItemIcon>

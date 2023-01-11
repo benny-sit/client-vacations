@@ -1,7 +1,7 @@
 import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import NavBar from "./NavBar";
 import SideNav from "./SideNav";
 import Vacations from "./Vacations/Vacations";
@@ -42,7 +42,7 @@ export default function Dash() {
         disableGutters
       >
         <SideNav />
-        <Vacations />
+        <Outlet />
       </Container>
     </Box>
   );

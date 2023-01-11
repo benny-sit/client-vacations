@@ -17,7 +17,8 @@ const modalsSlice = createSlice({
         },
         closeVacationModal: (state, payload) => {
             state.vacationModal = false;
-        }
+        },
+        
     }
 })
 

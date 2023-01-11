@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, CircularProgress, FormControlLabel, Grid, LinearProgress, Link as LinkMui , TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Checkbox, CircularProgress, FormControlLabel, Grid, LinearProgress, Link as LinkMui , TextField, Typography } from '@mui/material'
 import { KeyObject } from 'crypto'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -221,12 +221,13 @@ export default function Register() {
                 />
               </Grid>
             </Grid>
-            <Box sx={{
-              color: 'red',
-            
+            { error != '' && 
+            <Alert severity='error' sx={{
+              mt: 1
             }}>
-              {error !== '' && error}
-            </Box>
+               {error}
+            </Alert>
+            }
             <Button
               type="submit"
               fullWidth

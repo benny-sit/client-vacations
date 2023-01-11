@@ -15,6 +15,8 @@ import { AuthAxios } from './services/api'
 import { useAppDispatch, useAppSelector } from './app/hooks'
 import { selectCurrentToken, selectCurrentUser, setCredentials } from './features/auth/authSlice'
 import Loading from './components/Loading'
+import Vacations from './components/Vacations/Vacations'
+import Reports from './components/Reports/Reports'
 
 const ProtectedRoute = ({ children,}: any) => {
   
@@ -67,7 +69,10 @@ export default function MainRouting() {
           <Route index element={<Login />} />
           <Route path='/register' element={<Register />} />
         </Route>
-        <Route path='/dash' element={<Dash />}/>
+        <Route path='/dash' element={<Dash />}>
+          <Route index element={<Vacations />} />
+          <Route path='reports' element={<Reports />} />
+        </Route>
         <Route path='/loading' element={<Loading />} />
     </Routes>
   )

@@ -2,7 +2,7 @@ import React, { useState, useEffect} from 'react'
 import { AuthAxios } from '../services/api'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import {selectCurrentToken, setCredentials} from '../features/auth/authSlice'
-import { Box, CircularProgress, Link as LinkMui} from '@mui/material' 
+import { Alert, Box, CircularProgress, Link as LinkMui} from '@mui/material' 
 import Card from '@mui/material/Card'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
@@ -120,9 +120,11 @@ const Login = () => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Box sx={{color: 'red'}}>
-              {error !== '' && error}
-            </Box>
+            { error != '' && 
+            <Alert severity='error'>
+               {error}
+            </Alert>
+            }
             <Button
               type="submit"
               fullWidth
