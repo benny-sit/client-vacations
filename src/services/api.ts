@@ -2,7 +2,7 @@ import axios from "axios";
 import { setToken } from "../features/auth/authSlice";
 import { useAppDispatch } from "../app/hooks";
 
-export const BASE_URL = "http://localhost:3001/"
+export const BASE_URL = "https://backend-vacations-production.up.railway.app"
 
 
 export const AuthAxios = axios.create({

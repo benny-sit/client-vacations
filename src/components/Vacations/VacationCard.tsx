@@ -159,7 +159,7 @@ export default function VacationCard({details}: cardProps) {
             :
             (
               <Typography variant="body2" color="text.secondary">
-              {details.description.substring(0, 100) + (details.description.length > 100 && " ..." || '')}
+              {details.description.substring(0, 90) + (details.description.length > 100 && " ..." || '')}
               </Typography>
             )
             }

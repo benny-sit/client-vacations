@@ -10,6 +10,7 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { AuthAxios } from "../../services/api";
 import { Vacation } from "../../types";
 import { selectEditVacation, updateVacation } from "../../features/vacations/vacationsSlice";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute" as "absolute",
@@ -30,11 +31,12 @@ const config = {
 export default function VacationsModal() {
   const open = useAppSelector(selectVacationModalState);
   const editVacation = useAppSelector(selectEditVacation);
+  const navigate = useNavigate();
   const [err, setErr] = useState('');
   const dispatch = useAppDispatch();
 
   function handleSubmit(event: any) {
-    // event.preventDefault();
+    event.preventDefault();
     let formData = new FormData();
     
     const image = event.target.vacFile.files[0]
@@ -59,9 +61,11 @@ export default function VacationsModal() {
     }
 
     if (!editVacation) {
+      // console.log("Sending form data")
       AuthAxios.post('/admin/vacations', formData, config)
         .then(response => {
           setErr('')
+          navigate(0);
         })
         .catch(error => {
           setErr(error.response.data.error)
@@ -70,6 +74,7 @@ export default function VacationsModal() {
       AuthAxios.put(`/admin/vacations/${editVacation.id}`, formData, config)
        .then(response => {
           setErr('')
+          navigate(0);
        })
        .catch(error => {
         setErr(error.response.data.error)

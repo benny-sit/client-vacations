@@ -43,8 +43,8 @@ export default function Vacations() {
         const vacations: Vacation[] = resVac.data.result.map((vac: any) => { return {...vac, imageUrl: combineURLs(BASE_URL, vac.imageUrl) ,isFollowing: myVacId.includes(vac.id)}})
         const newNumberPages = Math.ceil(resVac.data.count / perPage)
 
-        console.log(resVac)
-        console.log(myVacations)
+        // console.log(resVac)
+        // console.log(myVacations)
 
         dispatch(setNumberPages({numberPages: newNumberPages}))
         dispatch(setVacations({vacations: vacations}))
